@@ -1,0 +1,3 @@
+- ucho
+  script:
+  - make test-in-container

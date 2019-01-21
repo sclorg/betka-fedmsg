@@ -1,0 +1,8 @@
+FROM docker.io/usercont/ucho
+
+COPY ./tests ${HOME}/tests
+RUN pip3 install -r ${HOME}/tests/requirements.txt && \
+    dnf install make -y && dnf clean all
+
+COPY Makefile /root
+CMD ["make", "test"]

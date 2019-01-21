@@ -1,0 +1,25 @@
+---
+some.new.event:
+  - rule: "1 == 1"
+    routes:
+      task.do.something: queue.somewhere
+      task.print.something_nice: queue.somewhere
+  - routes:
+      task.print.something_nice: queue.somewhere
+      task.print.something_nicer: queue.somewhere
+  - rule: "1 == 2"
+    routes:
+      task.just.pass: queue.somewhere
+
+some.new.fedmsg.event:
+  - routes:
+      task.do.something: queue.somewhere
+
+event.failing.rule:
+  - rule: "message['numcommits'] == 0"
+    routes:
+      task.send.some_report: queue.reporter
+
+event.no.rule:
+  - routes:
+      task.send.some_report: queue.reporter

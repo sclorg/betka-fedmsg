@@ -1,0 +1,4 @@
+celery[redis]
+python-qpid-proton
+pyzmq
+anymarkup

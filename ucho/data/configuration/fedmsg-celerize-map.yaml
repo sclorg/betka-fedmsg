@@ -1,0 +1,8 @@
+---
+org.fedoraproject.prod.github.issue.comment:
+  - routes:
+      task.zdravomil.run_linters_pr: queue.zdravomil
+
+org.fedoraproject.prod.github.push:
+  - routes:
+      task.zdravomil.run_linters_pr: queue.zdravomil
