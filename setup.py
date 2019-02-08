@@ -8,6 +8,8 @@ setup(
     name='ucho',
     version='0.1.0',
     packages=find_packages(exclude=['tests']),
+    author='Red Hat',
+    author_email='user-cont-team@redhat.com',
     url='https://github.com/user-cont/ucho',
     scripts=['listen.py'],
     package_data={'ucho': [os.path.join('data', 'configuration', '*.yaml')]}
