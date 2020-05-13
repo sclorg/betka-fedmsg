@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:28
+FROM registry.fedoraproject.org/fedora:31
 
 ENV LANG=en_US.UTF-8 \
     HOME=/root
