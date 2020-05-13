@@ -1,8 +1,8 @@
 ---
 org.fedoraproject.prod.github.issue.comment:
   - routes:
-      task.betka.pr_sync: queue.betka-fedora
+      task.betka.pr_sync: queue.betka.fedora
 
 org.fedoraproject.prod.github.push:
   - routes:
-      task.betka.master_sync: queue.betka-fedora
+      task.betka.master_sync: queue.betka.fedora
