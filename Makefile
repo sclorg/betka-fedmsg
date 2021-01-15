@@ -8,8 +8,9 @@ build:
 
 fedmsg-start: build
 	docker run -it --net=host \
-	-e REDIS_BROKER='redis://localhost:6379/0' \
-	-e REDIS_BACKEND='redis://localhost:6379/0' \
+	--env FEDORA_MESSAGING_CONF=/home/ucho/.config/fedora.toml \
+	-e REDIS_SERVICE_HOST=localhost \
+	-v $(CURDIR)/fedora.toml:/home/ucho/.config/fedora.toml \
 	${UCHO_IMAGE_NAME}
 
 

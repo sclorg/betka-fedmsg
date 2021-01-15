@@ -1,32 +1,42 @@
+# MIT License
+#
+# Copyright (c) 2018-2019 Red Hat, Inc.
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import os
-import zmq
-import anymarkup
-import logging
-from ucho.utils import pretty_dict, get_configuration_path
+
 from ucho.celerize import Celerize
+from ucho.utils import get_configuration_path
+from fedora_messaging import api, config
+
+config.conf.setup_logging()
 
 
-def execute_fedmsg_receiver(address, endpoint):
-    celerize = Celerize(os.path.join(get_configuration_path(), 'fedmsg-celerize-map.yaml'))
-    ctx = zmq.Context()
-    s = ctx.socket(zmq.SUB)
-    s.connect(endpoint)
-
-    s.setsockopt(zmq.SUBSCRIBE, address.encode())
-
-    poller = zmq.Poller()
-    poller.register(s, zmq.POLLIN)
-
-    logging.info("connected to '{}' endpoint".format(endpoint))
-    while True:
-        _ = poller.poll()  # This blocks until a message arrives
-        topic, msg = s.recv_multipart()
-        message = anymarkup.parse(msg)
-        details = {
-            'topic': topic.decode('utf-8'),
-            'msg': message['msg']
-        }
-
-        logging.info('received message from topic: %s', topic.decode('utf-8'))
-        logging.info('Message ID: %s', message.get('msg_id', 'Not Found'))
-        celerize.execute(details)
+def listen_from_fedora_messaging():
+    """
+    fedora-messaging is written in an async way: callbacks
+    """
+    # Start consuming messages using our callback. This call will block until
+    # a KeyboardInterrupt is raised, or the process receives a SIGINT or SIGTERM
+    # signal.
+    celerize = Celerize(
+        os.path.join(get_configuration_path(), "fedmsg-celerize-map.yaml")
+    )
+    api.consume(celerize.fedora_messaging_callback)

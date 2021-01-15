@@ -1,10 +1,11 @@
 # Ucho
 
-Ucho can transfer fedmsg events to celery tasks.
+Ucho can transfer Fedora Messaging events to celery tasks.
 
 ## Configuration
 
-If you are interested in specific fedmsg topic, add it to data/configuration/fedmsg-celerize-map.yaml.
+If you are interested in specific Fedora Messaging topic,
+add it to data/configuration/fedmsg-celerize-map.yaml.
 
 ## tl;dr Just tell me how to start this
 

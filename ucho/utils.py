@@ -11,11 +11,11 @@ def _get_package_path():
 
 
 def get_certificates_path():
-  return os.path.join(_get_package_path(), 'ucho', 'data', 'certificates')
+    return os.path.join(_get_package_path(), 'ucho', 'data', 'certificates')
 
 
 def get_configuration_path():
-  return os.path.join(_get_package_path(), 'ucho', 'data', 'configuration')
+    return os.path.join(_get_package_path(), 'ucho', 'data', 'configuration')
 
 
 def pretty_dict(report_dict):
