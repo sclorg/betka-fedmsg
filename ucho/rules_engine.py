@@ -2,7 +2,7 @@ import re
 import ast
 import _ast
 import logging
-from ucho.utils import UchoError, pretty_dict
+from ucho.utils import UchoError
 
 
 class UchoRulesError(UchoError):
