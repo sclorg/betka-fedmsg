@@ -1,36 +1,36 @@
 ---
-  kind: DeploymentConfig
-  apiVersion: v1
-  metadata:
-    labels:
-      service: ucho-fedmsg
-    name: ucho-fedmsg
-  spec:
-    template:
-      metadata:
-        labels:
-          name: ucho-fedmsg
-      spec:
-        volumes:
-          - name: fedora-toml
-            secret:
-              secretName: fedora-toml
-        containers:
-          - name: ucho-fedmsg
-            image: quay.io/rhscl/betka-fedmsg
-            volumeMounts:
-              - name: fedora-toml
-                mountPath: /home/ucho/.config/fedora.toml
-            env:
-              - name: REDIS_SERVICE_HOST
-                value: redis
-            resources:
-              requests:
-                memory: "200Mi"
-                cpu: "100m"
-              limits:
-                memory: "400Mi"
-                cpu: "200m"
-    replicas: 1
-    strategy:
-      type: Recreate
+kind: DeploymentConfig
+apiVersion: v1
+metadata:
+  labels:
+    service: ucho-fedmsg
+  name: ucho-fedmsg
+spec:
+  template:
+    metadata:
+      labels:
+        name: ucho-fedmsg
+    spec:
+      volumes:
+        - name: fedora-toml
+          secret:
+            secretName: fedora-toml
+      containers:
+        - name: ucho-fedmsg
+          image: quay.io/rhscl/betka-fedmsg
+          volumeMounts:
+            - name: fedora-toml
+              mountPath: /home/ucho/.config/fedora.toml
+          env:
+            - name: REDIS_SERVICE_HOST
+              value: redis
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "100m"
+            limits:
+              memory: "400Mi"
+              cpu: "200m"
+  replicas: 1
+  strategy:
+    type: Recreate

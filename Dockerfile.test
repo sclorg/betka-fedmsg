@@ -1,4 +1,4 @@
-FROM docker.io/usercont/ucho
+FROM quay.io/rhscl/betka-fedmsg
 
 COPY ./tests ${HOME}/tests
 RUN pip3 install -r ${HOME}/tests/requirements.txt && \
