@@ -24,40 +24,34 @@ class TestCelerize(object):
         assert self.celerize.celerize_config == anymarkup.parse_file(CELERY_MAP_PATH)
 
     def test_rule_not_matching(self):
-        flexmock(self.celerize.celery_app.conf). \
-            should_receive("update").once(). \
-            and_return()
-        flexmock(self.celerize.celery_app).\
-            should_receive("send_task").never()
+        assert self.celerize.celery_app
+        flexmock(self.celerize.celery_app.conf).should_receive(
+            "update"
+        ).once().and_return()
+        flexmock(self.celerize.celery_app).should_receive("send_task").never()
         self.message.body = {
             "topic": "event.failing.rule",
             "numcommits": "0",
             "branch": "rhel-8.0.0",
-
         }
         self.celerize.execute(self.message)
 
     def test_task_routes_loaded(self):
-        flexmock(self.celerize.celery_app.conf). \
-            should_receive("update").once().\
-            and_return()
-        flexmock(self.celerize.celery_app).\
-            should_receive("send_task").times(3). \
-            and_return()
-        self.message.body = {
-            "topic": "some.new.event",
-            "action": "created"
-        }
+        assert self.celerize.celery_app
+        flexmock(self.celerize.celery_app.conf).should_receive(
+            "update"
+        ).once().and_return()
+        flexmock(self.celerize.celery_app).should_receive("send_task").times(
+            3
+        ).and_return()
+        self.message.body = {"topic": "some.new.event", "action": "created"}
         self.celerize.execute(self.message)
 
     def test_no_rule(self):
-        flexmock(self.celerize.celery_app.conf). \
-            should_receive("update").once(). \
-            and_return()
-        flexmock(self.celerize.celery_app). \
-            should_receive("send_task"). \
-            and_return()
-        self.message.body = {
-            "topic": "event.no.rule"
-        }
+        assert self.celerize.celery_app
+        flexmock(self.celerize.celery_app.conf).should_receive(
+            "update"
+        ).once().and_return()
+        flexmock(self.celerize.celery_app).should_receive("send_task").and_return()
+        self.message.body = {"topic": "event.no.rule"}
         self.celerize.execute(self.message)

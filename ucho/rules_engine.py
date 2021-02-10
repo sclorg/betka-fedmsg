@@ -28,26 +28,29 @@ class InvalidASTNodeError(UchoRulesError):
         super(InvalidASTNodeError, self).__init__(
             "It is not allowed to use '{}' in rules".format(node.__class__.__name__),
             rules,
-            'Dangerous and disallowed node used in rules',
-            "It is not allowed to use '{}' in rules.".format(node.__class__.__name__))
+            "Dangerous and disallowed node used in rules",
+            "It is not allowed to use '{}' in rules.".format(node.__class__.__name__),
+        )
 
 
 class RulesSyntaxError(UchoRulesError):
     def __init__(self, rules, exc):
         super(RulesSyntaxError, self).__init__(
-            'Cannot parse rules',
+            "Cannot parse rules",
             rules,
             "Cannot parse rules '{}'".format(rules),
-            'Position {}:{}: {}'.format(exc.lineno, exc.offset, exc))
+            "Position {}:{}: {}".format(exc.lineno, exc.offset, exc),
+        )
 
 
 class RulesTypeError(UchoRulesError):
     def __init__(self, rules, exc):
         super(RulesTypeError, self).__init__(
-            'Cannot parse rules',
+            "Cannot parse rules",
             rules,
             "Cannot parse rules '{}'".format(rules),
-            str(exc))
+            str(exc),
+        )
 
 
 class RulesASTVisitor(ast.NodeTransformer):
@@ -55,17 +58,45 @@ class RulesASTVisitor(ast.NodeTransformer):
     Custom AST visitor, making sure no disallowed nodes are present in the rules' AST.
     """
 
-    _valid_classes = tuple([
-        getattr(_ast, node_class) for node_class in (
-            'Expression', 'Expr', 'Compare', 'Name', 'Load', 'BoolOp', 'UnaryOp', 'USub',
-            'Constant', 'List', 'Tuple', 'Dict',
-            'Subscript', 'Index', 'ListComp', 'comprehension',
-            'Store',
-            'Eq', 'NotEq', 'Lt', 'LtE', 'Gt', 'GtE', 'Is', 'IsNot', 'In', 'NotIn',
-            'And', 'Or', 'Not',
-            'Attribute', 'Call'
-        )
-    ])
+    _valid_classes = tuple(
+        [
+            getattr(_ast, node_class)
+            for node_class in (
+                "Expression",
+                "Expr",
+                "Compare",
+                "Name",
+                "Load",
+                "BoolOp",
+                "UnaryOp",
+                "USub",
+                "Constant",
+                "List",
+                "Tuple",
+                "Dict",
+                "Subscript",
+                "Index",
+                "ListComp",
+                "comprehension",
+                "Store",
+                "Eq",
+                "NotEq",
+                "Lt",
+                "LtE",
+                "Gt",
+                "GtE",
+                "Is",
+                "IsNot",
+                "In",
+                "NotIn",
+                "And",
+                "Or",
+                "Not",
+                "Attribute",
+                "Call",
+            )
+        ]
+    )
 
     def __init__(self, rules, *args, **kwargs):
         super(RulesASTVisitor, self).__init__(*args, **kwargs)
@@ -107,7 +138,7 @@ class Rules(object):
         self._code = None
 
     def __repr__(self):
-        return '<Rules: {}>'.format(self._rules)
+        return "<Rules: {}>".format(self._rules)
 
     def _compile(self):
         """
@@ -116,7 +147,7 @@ class Rules(object):
         """
 
         try:
-            tree = ast.parse(self._rules, mode='eval')
+            tree = ast.parse(self._rules, mode="eval")
 
         except SyntaxError as exc:
             raise RulesSyntaxError(self._rules, exc)
@@ -127,7 +158,7 @@ class Rules(object):
         RulesASTVisitor(self).visit(tree)
 
         try:
-            return compile(tree, '<static-config-file>', 'eval')
+            return compile(tree, "<static-config-file>", "eval")
 
         except Exception as e:
             raise RulesTypeError(self._rules, e)
@@ -147,7 +178,7 @@ class Rules(object):
             return eval(self._code, our_globals, our_locals)
 
         except NameError as exc:
-            raise UchoError('Unknown variable used in rule: {}'.format(str(exc)))
+            raise UchoError("Unknown variable used in rule: {}".format(str(exc)))
 
 
 def evaluate_rules(rules, context=None):
@@ -169,17 +200,18 @@ def evaluate_rules(rules, context=None):
 
     def _enhance_strings(variables):
         return {
-            key: MatchableString(value) if isinstance(value, str) else value for key, value in variables.items()
+            key: MatchableString(value) if isinstance(value, str) else value
+            for key, value in variables.items()
         }
 
     custom_locals = _enhance_strings(context or {})
 
-    custom_locals['EXISTS'] = lambda name: name in custom_locals
+    custom_locals["EXISTS"] = lambda name: name in custom_locals
 
-    logging.debug('rules: {}'.format(rules))
-    logging.debug('locals: {}'.format(custom_locals))
+    logging.debug("rules: {}".format(rules))
+    logging.debug("locals: {}".format(custom_locals))
 
     result = Rules(rules).eval({}, custom_locals)
-    logging.debug('eval result: {}'.format(result))
+    logging.debug("eval result: {}".format(result))
 
     return result
