@@ -1,6 +1,6 @@
 .PHONY: build fedmsg-start clean build-test-image test-in-container test
 
-UCHO_IMAGE_NAME = docker.io/usercont/ucho
+UCHO_IMAGE_NAME = quay.io/rhscl/betka-fedmsg
 UCHO_TEST_IMAGE_NAME = user-cont/ucho-test
 
 build:
