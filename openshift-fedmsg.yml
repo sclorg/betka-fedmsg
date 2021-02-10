@@ -11,14 +11,19 @@
         labels:
           name: ucho-fedmsg
       spec:
+        volumes:
+          - name: fedora-toml
+            secret:
+              secretName: fedora-toml
         containers:
           - name: ucho-fedmsg
-            image: docker.io/usercont/ucho
+            image: quay.io/rhscl/betka-fedmsg
+            volumeMounts:
+              - name: fedora-toml
+                mountPath: /home/ucho/.config/fedora.toml
             env:
-              - name: REDIS_BACKEND
-                value: redis://redis:6379/0
-              - name: REDIS_BROKER
-                value: redis://redis:6379/0
+              - name: REDIS_SERVICE_HOST
+                value: redis
             resources:
               requests:
                 memory: "200Mi"
