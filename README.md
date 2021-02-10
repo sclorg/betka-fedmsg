@@ -1,5 +1,7 @@
 # Ucho
 
+[![Docker Repository on Quay](https://quay.io/repository/rhscl/betka-fedmsg/status "Docker Repository on Quay")](https://quay.io/repository/rhscl/betka-fedmsg)
+
 Ucho can transfer Fedora Messaging events to celery tasks.
 
 ## Configuration
