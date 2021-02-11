@@ -3,27 +3,29 @@ kind: DeploymentConfig
 apiVersion: v1
 metadata:
   labels:
-    service: ucho-fedmsg
-  name: ucho-fedmsg
+    service: ucho-fedmsg-fedora
+  name: ucho-fedmsg-fedora
 spec:
   template:
     metadata:
       labels:
-        name: ucho-fedmsg
+        name: ucho-fedmsg-fedora
     spec:
       volumes:
         - name: fedora-toml
           secret:
             secretName: fedora-toml
       containers:
-        - name: ucho-fedmsg
-          image: quay.io/rhscl/betka-fedmsg
+        - name: ucho-fedmsg-fedora
           volumeMounts:
             - name: fedora-toml
-              mountPath: /home/ucho/.config/fedora.toml
+              mountPath: /home/ucho/.config/
+          image: quay.io/rhscl/betka-fedmsg:latest
           env:
             - name: REDIS_SERVICE_HOST
               value: redis
+            - name: FEDORA_MESSAGING_CONF
+              value: /home/ucho/.config/fedora.toml
           resources:
             requests:
               memory: "200Mi"
@@ -31,6 +33,32 @@ spec:
             limits:
               memory: "400Mi"
               cpu: "200m"
+  # https://docs.openshift.com/container-platform/3.11/dev_guide/deployments/basic_deployment_operations.html#image-change-trigger
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - ucho-fedmsg-fedora
+        from:
+          kind: ImageStreamTag
+          name: "ucho-fedmsg-fedora:latest"
   replicas: 1
   strategy:
     type: Recreate
+---
+kind: ImageStream
+apiVersion: v1
+metadata:
+  name: ucho-fedmsg-fedora
+spec:
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: quay.io/rhscl/betka-fedmsg:latest
+      importPolicy:
+        # periodically query registry to synchronize tag and image metadata
+        scheduled: true
+  lookupPolicy:
