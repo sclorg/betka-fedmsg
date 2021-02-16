@@ -92,4 +92,5 @@ class Celerize:
                 tasks_to_send.add(task)
 
         for task in tasks_to_send:
-            self.celery_app.send_task(task, kwargs={"message": message.body})
+            logging.info(f"Task sent to Celery is: {task}. ")
+            self.celery_app.send_task(name=task, kwargs={"message": message.body})
