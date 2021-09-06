@@ -13,9 +13,6 @@ jobs:
       github.event.issue.pull_request
       && contains(github.event.comment.body, '/test')
       && contains(fromJson('["OWNER", "MEMBER"]'), github.event.comment.author_association)
-    outputs:
-      REQ_ID: ${{steps.sched_test.outputs.REQ_ID}}
-      SHA: ${{steps.sha.outputs.SHA}}
     steps:
       - name: Get pull request number
         id: pr_nr
@@ -86,6 +83,10 @@ jobs:
           cat response.json
           # Store REQ_ID into outputs for later on usage
           echo "::set-output name=REQ_ID::$(jq -r .id response.json)"
+          
+    outputs:
+      REQ_ID: ${{steps.sched_test.outputs.REQ_ID}}
+      SHA: ${{steps.sha.outputs.SHA}}
 
   running:
     needs: build
