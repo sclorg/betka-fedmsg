@@ -76,11 +76,12 @@ jobs:
               "variables": {
                 "REPO_URL": "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY",
                 "REPO_NAME": "$GITHUB_REPOSITORY",
-                "PR_NUMBER": "${{ steps.pr_nr.outputs.PR_NR }}",
+                "PR_NUMBER": "${{ steps.pr_nr.outputs.PR_NR }}"
               }
             }]
           }
           EOF
+          cat request.json
           curl ${{ secrets.TF_ENDPOINT }}/requests --data @request.json --header "Content-Type: application/json" --output response.json
           cat response.json
           # Store REQ_ID into outputs for later on usage
