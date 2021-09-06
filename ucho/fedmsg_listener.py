@@ -26,8 +26,6 @@ from ucho.celerize import Celerize
 from ucho.utils import get_configuration_path
 from fedora_messaging import api, config
 
-config.conf.setup_logging()
-
 
 def listen_from_fedora_messaging():
     """
