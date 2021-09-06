@@ -10,7 +10,6 @@ from ucho.rules_engine import evaluate_rules
 from ucho.utils import UchoError, pretty_dict
 
 GITHUB_TOPICS = {
-    "org.fedoraproject.prod.github.issue.comment",
     "org.fedoraproject.prod.github.push",
 }
 
