@@ -60,8 +60,8 @@ jobs:
         id: sched_test
         run: |
           # Update ubuntu-latest in order to install curl and jq
-          sudo apt update
-          sudo apt -y install curl jq
+          sudo apt-get update
+          sudo apt-get -y install curl jq
           cat << EOF > request.json
           {
             "api_key": "${{ secrets.TF_PUBLIC_API_KEY }}",
@@ -99,8 +99,8 @@ jobs:
         run: |
           # Update ubuntu-20.04 in order to install curl and jq
           # each job is separate machine
-          sudo apt update
-          sudo apt -y install curl jq
+          sudo apt-get update
+          sudo apt-get -y install curl jq
           # Propagate REQ_ID and SHA into the finish section
           echo "::set-output name=REQ_ID::${{needs.build.outputs.REQ_ID}}"
           echo "::set-output name=SHA::${{needs.build.outputs.SHA}}"
@@ -153,8 +153,8 @@ jobs:
         run: |
           # Update ubuntu-20.04 in order to install curl and jq
           # each job is separate machine
-          sudo apt update
-          sudo apt -y install curl jq
+          sudo apt-get update
+          sudo apt-get -y install curl jq
           curl ${{ secrets.TF_ENDPOINT }}/requests/${{needs.running.outputs.REQ_ID}} > job.json
           cat job.json
           state=$(jq -r .state job.json)
