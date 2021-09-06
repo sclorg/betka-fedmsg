@@ -76,7 +76,6 @@ jobs:
                 "REPO_URL": "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY",
                 "REPO_NAME": "$GITHUB_REPOSITORY",
                 "PR_NUMBER": "${{ steps.pr_nr.outputs.PR_NR }}",
-                "TOX": "${{ matrix.python }}",
               }
             }]
           }
@@ -125,7 +124,7 @@ jobs:
       - name: Check test is still running
         id: still_running
         run: |
-          CMD=${{ secrets.TF_ENDPOINT }}/requests/${{needs.build.outputs.REQ_ID}}
+          CMD=${{ secrets.TF_ENDPOINT }}/requests/${{ needs.build.outputs.REQ_ID }}
           curl $CMD > job.json
           state=$(jq -r .state job.json)
           # Wait till job is not finished. As soon as state is complete or failure then go to the finish action
