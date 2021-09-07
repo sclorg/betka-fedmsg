@@ -12,7 +12,7 @@ jobs:
     if: |
       github.event.issue.pull_request
       && contains(github.event.comment.body, '/test')
-      && contains(fromJson('["OWNER", "MEMBER"]'), github.event.comment.author_association)
+      && contains(fromJson('["OWNER","MEMBER"]'), github.event.comment.author_association)
     steps:
       - name: Get pull request number
         id: pr_nr
@@ -51,6 +51,7 @@ jobs:
           curl -X POST -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/${{steps.sha.outputs.SHA}} \
             --data @pending.json
+          
           echo "::set-output name=GITHUB_REPOSITORY::$GITHUB_REPOSITORY"
 
       - name: Schedule a test on Testing Farm for Fedora
@@ -81,20 +82,21 @@ jobs:
           cat request.json
           curl ${{ secrets.TF_ENDPOINT }}/requests --data @request.json --header "Content-Type: application/json" --output response.json
           cat response.json
+          
           # Store REQ_ID into outputs for later on usage
           echo "::set-output name=REQ_ID::$(jq -r .id response.json)"
           
     outputs:
-      REQ_ID: ${{steps.sched_test.outputs.REQ_ID}}
-      SHA: ${{steps.sha.outputs.SHA}}
+      REQ_ID: ${{ steps.sched_test.outputs.REQ_ID }}
+      SHA: ${{ steps.sha.outputs.SHA }}
 
   running:
     needs: build
     name: Check running tests on Testing Farm service
     runs-on: ubuntu-20.04
     outputs:
-      REQ_ID: ${{steps.req_sha.outputs.REQ_ID}}
-      SHA: ${{steps.req_sha.outputs.SHA}}
+      REQ_ID: ${{ steps.req_sha.outputs.REQ_ID }}
+      SHA: ${{ steps.req_sha.outputs.SHA }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Check if REQ_ID and SHA exists
@@ -123,7 +125,7 @@ jobs:
           EOF
           # Update GitHub status description to 'Build started'
           curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/${{needs.build.outputs.SHA}} \
+            https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/${{ needs.build.outputs.SHA }} \
             --data @running.json
 
       - name: Check test is still running
