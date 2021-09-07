@@ -82,9 +82,11 @@ jobs:
           cat request.json
           curl ${{ secrets.TF_ENDPOINT }}/requests --data @request.json --header "Content-Type: application/json" --output response.json
           cat response.json
+          req_id=$(jq -r .id response.json)
+          echo "$req_id"
           
           # Store REQ_ID into outputs for later on usage
-          echo "::set-output name=REQ_ID::$(jq -r .id response.json)"
+          echo "::set-output name=REQ_ID::$req_id"
           
     outputs:
       REQ_ID: ${{ steps.sched_test.outputs.REQ_ID }}
@@ -107,8 +109,8 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install curl jq
           # Propagate REQ_ID and SHA into the finish section
-          echo "::set-output name=REQ_ID::${{needs.build.outputs.REQ_ID}}"
-          echo "::set-output name=SHA::${{needs.build.outputs.SHA}}"
+          echo "::set-output name=REQ_ID::${{ needs.build.outputs.REQ_ID }}"
+          echo "::set-output name=SHA::${{ needs.build.outputs.SHA }}"
 
       - name: Switch to running state of Testing Farm request
         id: running
@@ -116,7 +118,7 @@ jobs:
           # Create running.json file for query, whether job is finished or not.
           cat << EOF > running.json
           {
-            "sha": "${{needs.build.outputs.SHA}}",
+            "sha": "${{ needs.build.outputs.SHA }}",
             "state": "pending",
             "context": "Testing Farm",
             "description": "Build started",
