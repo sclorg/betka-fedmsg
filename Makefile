@@ -2,23 +2,29 @@
 
 UCHO_IMAGE_NAME = quay.io/rhscl/betka-fedmsg
 UCHO_TEST_IMAGE_NAME = user-cont/ucho-test
+UNAME=$(shell uname)
+ifeq ($(UNAME),Darwin)
+	PODMAN := /usr/local/bin/docker
+else
+	PODMAN := /usr/bin/podman
+endif
 
 build:
-	docker build --tag ${UCHO_IMAGE_NAME} .
+	$(PODMAN) build --tag ${UCHO_IMAGE_NAME} .
 
 fedmsg-start: build
-	docker run -it --net=host \
-	--env FEDORA_MESSAGING_CONF=/home/ucho/.config/fedora.toml \
-	-e REDIS_SERVICE_HOST=localhost \
-	-v $(CURDIR)/fedora.toml:/home/ucho/.config/fedora.toml \
-	${UCHO_IMAGE_NAME}
+	$(PODMAN) run -it --net=host \
+		--env FEDORA_MESSAGING_CONF=/home/ucho/.config/fedora.toml \
+		-e REDIS_SERVICE_HOST=localhost \
+		-v $(CURDIR)/fedora.toml:/home/ucho/.config/fedora.toml \
+		${UCHO_IMAGE_NAME}
 
 
 build-test-image: build
-	docker build --tag ${UCHO_TEST_IMAGE_NAME} -f Dockerfile.test .
+	$(PODMAN) build --tag ${UCHO_TEST_IMAGE_NAME} -f Dockerfile.test .
 
 test-in-container: build-test-image
-	docker run ${UCHO_TEST_IMAGE_NAME}
+	$(PODMAN) run ${UCHO_TEST_IMAGE_NAME}
 
 test:
 	DEPLOYMENT='test' pytest --verbose --showlocals
