@@ -41,7 +41,7 @@ class Celerize:
             else:
                 raise ValueError("Celery broker not configured")
             self._celery_app = Celery(broker=broker_url)
-            logger.debug(f"Celery uses {broker_url}")
+            logger.info(f"Celery uses {broker_url}")
         return self._celery_app
 
     def fedora_messaging_callback(self, message: Message):
@@ -85,7 +85,7 @@ class Celerize:
             result = evaluate_rules(rule.get("rule"), context=context)
             if not result:
                 logger.debug("message received: %s", pretty_dict(message.body))
-                logger.info("rule {!r} does not match, moving on".format(rule["rule"]))
+                logger.debug("rule {!r} does not match, moving on".format(rule["rule"]))
                 continue
             for task in rule.get("routes", {}).keys():
                 logger.debug("message received: %s", pretty_dict(message.body))
