@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:32
+FROM quay.io/fedora/fedora:37
 
 ENV LANG=en_US.UTF-8 \
     HOME=/root
