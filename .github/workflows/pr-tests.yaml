@@ -70,7 +70,7 @@ jobs:
             }},
             "environments": [{
               "arch": "x86_64",
-              "os": {"compose": "Fedora-34"},
+              "os": {"compose": "Fedora-37"},
               "variables": {
                 "REPO_URL": "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY",
                 "REPO_NAME": "$GITHUB_REPOSITORY",
