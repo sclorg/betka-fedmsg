@@ -75,7 +75,6 @@ class RulesASTVisitor(ast.NodeTransformer):
                 "Tuple",
                 "Dict",
                 "Subscript",
-                "Index",
                 "ListComp",
                 "comprehension",
                 "Store",
