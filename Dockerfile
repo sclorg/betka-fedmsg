@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora:37
+FROM quay.io/fedora/fedora:39
 
 ENV LANG=en_US.UTF-8 \
     HOME=/root

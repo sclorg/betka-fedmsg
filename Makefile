@@ -4,7 +4,7 @@ UCHO_IMAGE_NAME = quay.io/rhscl/betka-fedmsg
 UCHO_TEST_IMAGE_NAME = user-cont/ucho-test
 UNAME=$(shell uname)
 ifeq ($(UNAME),Darwin)
-	PODMAN := /usr/local/bin/docker
+	PODMAN := /usr/local/bin/podman
 else
 	PODMAN := /usr/bin/podman
 endif
