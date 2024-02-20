@@ -1,7 +1,8 @@
 FROM quay.io/fedora/fedora:39
 
 ENV LANG=en_US.UTF-8 \
-    HOME=/root
+    HOME=/root \
+    VERSION=0.2.0
 
 # Install requirements
 COPY requirements.sh requirements.txt /tmp/ucho/
