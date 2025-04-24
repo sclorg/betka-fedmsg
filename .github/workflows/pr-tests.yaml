@@ -95,7 +95,7 @@ jobs:
   running:
     needs: build
     name: Check running tests on Testing Farm service
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     outputs:
       REQ_ID: ${{ steps.req_sha.outputs.REQ_ID }}
       SHA: ${{ steps.req_sha.outputs.SHA }}
@@ -147,7 +147,7 @@ jobs:
   finish:
     needs: running
     name: Tests are finished - switching to proper state
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check if REQ_ID exists
         run: echo "${{ needs.running.outputs.REQ_ID }}"
